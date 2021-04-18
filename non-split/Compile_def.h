@@ -1,0 +1,2 @@
+//#define NATIVE_SYSTEMC
+#define CLOCK_PERIOD 10
