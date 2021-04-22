@@ -133,7 +133,6 @@ void Testbench::output_data(){
 	i_b.reset();
 #endif
 
-	wait(5);
 	wait(1);
 
 	for (y = 0; y != height; ++y) {

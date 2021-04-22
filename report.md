@@ -155,6 +155,7 @@ Behaviour    : 60ms
 V_BASIC      : 128450.615100 us
 V_DPA        : 128450.615100 us
 ```
+
 * non-split
 ```
 Behaviour    : 60ms
@@ -163,8 +164,8 @@ V_DPA        : 76021.815100 us
 ```
 For the above result, we can found that if we integrate multiple port into a larger width port can reduce the latency of I/O.
 
-### Resource allocated
-* split
+### Resource allocated & Area diagram
+* split - BASIC
 ```
                +--------------------------------------------------------------------+
                |                                                                    |
@@ -208,7 +209,54 @@ For the above result, we can found that if we integrate multiple port into a lar
                |                                                                    |
                +--------------------------------------------------------------------+
 ```
-* non-split
+![](https://i.imgur.com/kxrqmjf.jpg)
+* split-DPA
+```
+               +--------------------------------------------------------------------+
+               |                                                                    |
+        00803: | Allocation Report for all threads:                                 |
+        00805: |                                        Area/Instance               |
+        00805: |                                  ------------------------    Total |
+        00805: |                 Resource  Count    Seq(#FF)    Comb    BB     Area |
+        00805: | ------------------------  -----  ----------  ------  ----  ------- |
+        00807: |  Filter_Mul_12Sx8U_12S_4      2               374.8          749.7 |
+        00807: | Filter_Add_12Ux12U_12U_4      2                91.7          183.3 |
+        00807: |             mux_12bx2i1c      3                32.6           97.8 |
+        00807: |             mux_12bx2i0c      2                37.3           74.5 |
+        00807: |              mux_8bx2i0c      3                24.8           74.5 |
+        00807: |      Filter_gen_busy_r_1      3                17.8           53.4 |
+        00807: |              mux_8bx3i0c      1                27.0           27.0 |
+        00807: |    Filter_And_1Ux1U_1U_1      3                 8.9           26.7 |
+        00807: |    Filter_Add_4Ux2U_4U_4      1                15.0           15.0 |
+        00807: |    Filter_Xor_1Ux1U_1U_1      3                 4.4           13.3 |
+        00807: |       Filter_Not_1U_1U_1      3                 4.1           12.3 |
+        00807: |    Filter_Add_2Ux1U_2U_4      2                 6.2           12.3 |
+        00807: |    Filter_Mul_2Ux2U_4U_4      1                11.3           11.3 |
+        00807: |              mux_2bx2i1c      2                 5.4           10.9 |
+        00807: |              mux_4bx2i1c      1                10.9           10.9 |
+        00807: |              mux_1bx7i1c      1                 9.5            9.5 |
+        00807: |              mux_1bx2i2c      4                 2.3            9.3 |
+        00807: |    Filter_N_Muxb_1_2_0_4      3                 2.4            7.2 |
+        00807: |     Filter_Or_1Ux1U_1U_4      3                 1.4            4.1 |
+        00807: |   Filter_ROM_9X32_filter      1                         ?        ? |
+        00808: |                registers     27                                    |
+        01442: |        Reg bits by type:                                           |
+        01442. |           EN SS SC AS AC                                           |
+        00809: |            0  0  1  0  0      6    5.5(1)       1.4                |
+        00809: |            0  1  0  0  0      3    5.5(1)       1.4                |
+        00809: |            1  0  0  0  0     88    7.5(1)       0.0                |
+        00809: |            1  0  1  0  0      8    7.5(1)       1.4                |
+        00809: |            1  1  0  0  0      3    7.5(1)       1.4                |
+        00809: |        all register bits    108    7.4(1)       0.3          821.5 |
+        02604: |          estimated cntrl      1                57.1           57.1 |
+        00811: | ------------------------------------------------------------------ |
+        00812: |               Total Area         794.1(108)  1487.4   0.0   2281.5 |
+               |                                                                    |
+               +--------------------------------------------------------------------+
+```
+![](https://i.imgur.com/2XQLw4n.jpg)
+
+* non-split-BASIC
 ```
                +--------------------------------------------------------------------+
                |                                                                    |
@@ -252,6 +300,53 @@ For the above result, we can found that if we integrate multiple port into a lar
                |                                                                    |
                +--------------------------------------------------------------------+
 ```
+
+![](https://i.imgur.com/MfMK3uM.jpg)
+* non-split-DPA
+```
+               +---------------------------------------------------------------------+
+               |                                                                     |
+        00803: | Allocation Report for all threads:                                  |
+        00805: |                                         Area/Instance               |
+        00805: |                                   ------------------------    Total |
+        00805: |                  Resource  Count    Seq(#FF)    Comb    BB     Area |
+        00805: | -------------------------  -----  ----------  ------  ----  ------- |
+        00807: | Filter_Add2Mul2s12u8u12_4      2               420.0          840.0 |
+        00807: |              mux_12bx2i0c      3                37.3          111.8 |
+        00807: |              mux_12bx2i1c      3                32.6           97.8 |
+        00807: |               mux_8bx2i0c      1                24.8           24.8 |
+        00807: |   Filter_Add2u2Mul2i3u2_4      1                17.8           17.8 |
+        00807: |       Filter_gen_busy_r_1      1                17.8           17.8 |
+        00807: |               mux_2bx2i1c      2                 5.4           10.9 |
+        00807: |     Filter_And_1Ux1U_1U_1      1                 8.9            8.9 |
+        00807: |               mux_3bx2i1c      1                 8.1            8.1 |
+        00807: |         Filter_Add2i1u2_4      2                 3.4            6.8 |
+        00807: |               mux_1bx2i2c      2                 2.3            4.7 |
+        00807: |     Filter_Xor_1Ux1U_1U_1      1                 4.4            4.4 |
+        00807: |        Filter_Not_1U_1U_1      1                 4.1            4.1 |
+        00807: |               mux_1bx3i1c      1                 3.8            3.8 |
+        00807: |    Filter_N_Muxb_1_2_13_4      1                 2.4            2.4 |
+        00807: |      Filter_Or_1Ux1U_1U_4      1                 1.4            1.4 |
+        00807: |    Filter_ROM_9X32_filter      1                         ?        ? |
+        00808: |                 registers     16                                    |
+        01442: |         Reg bits by type:                                           |
+        01442. |            EN SS SC AS AC                                           |
+        00809: |             0  0  1  0  0      2    5.5(1)       1.4                |
+        00809: |             0  1  0  0  0      1    5.5(1)       1.4                |
+        00809: |             1  0  0  0  0     92    7.5(1)       0.0                |
+        00809: |             1  0  1  0  0      5    7.5(1)       1.4                |
+        00809: |             1  1  0  0  0      1    7.5(1)       1.4                |
+        00809: |         all register bits    101    7.5(1)       0.1          766.1 |
+        02604: |           estimated cntrl      1                45.3           45.3 |
+        00811: | ------------------------------------------------------------------- |
+        00812: |                Total Area         753.8(101)  1223.0   0.0   1976.8 |
+               |                                                                     |
+               +---------------------------------------------------------------------+
+
+```
+![](https://i.imgur.com/jVskDFJ.jpg)
+
+
 For the above result, we can find that integrate multiple ports can reduce the amount of register
 => lower area
 
